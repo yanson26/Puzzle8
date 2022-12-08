@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -26,6 +25,7 @@ public class Main {
             TreeMap[0][i] = x;
         }
 
+        //FILL FIRST LINE
         for (int i = 1; i < lineCounter; i++) {
             char[] input = sc.nextLine().toCharArray();
             for (int j = 0; j < input.length; j++) {
@@ -33,6 +33,63 @@ public class Main {
                 TreeMap[i][j] = x;
             }
         }
+
+        //FILL OTHER LINES
+        for (int i = 0; i < lineCounter; i++) {
+            isVisible[i][0] = true;
+            isVisible[i][lineLength-1] = true;
+        }
+        for (int i = 0; i < lineLength; i++) {
+            isVisible[0][i] = true;
+            isVisible[lineCounter-1][i] = true;
+        }
+
+        //FILL BOOLEAN ARRAY
+        for (int i = 1; i < lineCounter - 1; i++) {
+            for (int j = 1; j < lineLength - 1; j++) {
+                boolean[] isVisibleNow ={true, true, true, true};
+
+                //CHECK NORTH
+                for (int k = 1; i-k >= 0; k++) {
+                    if(TreeMap[i][j] <= TreeMap[i-k][j]){
+                        isVisibleNow[0] = false;
+                        break;
+                    }
+                }
+                //CHECK SOUTH
+                for (int k = 1; i+k < lineCounter; k++) {
+                    if(TreeMap[i][j] <= TreeMap[i+k][j]){
+                        isVisibleNow[1] = false;
+                        break;
+                    }
+                }
+                //CHECK EAST
+                for (int k = 1; j+k < lineLength; k++) {
+                    if(TreeMap[i][j] <= TreeMap[i][j+k]){
+                        isVisibleNow[2] = false;
+                        break;
+                    }
+                }
+                //CHECK WEST
+                for (int k = 1; j-k >= 0; k++) {
+                    if(TreeMap[i][j] <= TreeMap[i][j-k]){
+                        isVisibleNow[3] = false;
+                        break;
+                    }
+                }
+
+                isVisible[i][j] = isVisibleNow[0] || isVisibleNow[1] || isVisibleNow[2] || isVisibleNow[3];
+            }
+        }
+
+        for (int i = 0; i < lineCounter; i++) {
+            for (int j = 0; j < lineLength; j++) {
+                if(isVisible[i][j]){
+                    visibleTrees += 1;
+                }
+            }
+        }
+        System.out.println(visibleTrees);
 
 
 
